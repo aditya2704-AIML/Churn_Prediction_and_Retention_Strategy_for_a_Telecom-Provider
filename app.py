@@ -16,14 +16,14 @@ model = load_model()
 
 st.sidebar.header("Customer Input Features")
 
-tenure_months = st.sidebar.slider("Tenure (Months)", min_value=1, max_value=120, value=12)
-monthly_charges = st.sidebar.number_input("Monthly Charges ($)", min_value=0.0, value=70.0, step=1.0)
-total_charges = st.sidebar.number_input("Total Charges ($)", min_value=0.0, value=800.0, step=10.0)
-nps_score = st.sidebar.slider("NPS Score", min_value=-80, max_value=100, value=20)
-overage_charges = st.sidebar.number_input("Overage Charges ($)", min_value=0.0, value=20.0, step=1.0)
-network_issues = st.sidebar.slider("Network Issues (Last 3M)", min_value=0, max_value=10, value=1)
-avg_data_gb = st.sidebar.number_input("Avg Data GB / Month", min_value=0.0, value=25.0, step=1.0)
-service_rating = st.sidebar.slider("Service Rating (Last 6M)", min_value=1.0, max_value=5.0, value=3.8, step=0.1)
+tenure_months = int(st.sidebar.slider("Tenure (Months)", min_value=1, max_value=120, value=12))
+monthly_charges = float(st.sidebar.number_input("Monthly Charges ($)", min_value=0.0, value=70.0, step=1.0))
+total_charges = float(st.sidebar.number_input("Total Charges ($)", min_value=0.0, value=800.0, step=10.0))
+nps_score = int(st.sidebar.slider("NPS Score", min_value=-80, max_value=100, value=20))
+overage_charges = float(st.sidebar.number_input("Overage Charges ($)", min_value=0.0, value=20.0, step=1.0))
+network_issues = int(st.sidebar.slider("Network Issues (Last 3M)", min_value=0, max_value=10, value=1))
+avg_data_gb = float(st.sidebar.number_input("Avg Data GB / Month", min_value=0.0, value=25.0, step=1.0))
+service_rating = int(st.sidebar.slider("Service Rating (Last 6M)", min_value=1, max_value=5, value=4))
 
 if st.button("Predict Churn Risk (Using Real Model)"):
     try:
