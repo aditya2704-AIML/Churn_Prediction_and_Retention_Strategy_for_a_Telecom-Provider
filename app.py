@@ -1,3 +1,4 @@
+app_code = """
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -31,17 +32,14 @@ contract_type = st.sidebar.selectbox("Contract Type", ["No Contract", "Month-to-
 plan_type = st.sidebar.selectbox("Plan Type", ["Prepaid", "Postpaid"])
 
 if st.button("Predict Churn Risk (Using Real Model)"):
-    # Create a baseline input dataframe structured like your training columns
-    # We load your engineered dataset template columns to ensure alignment
     try:
-        # Load one of your saved engineered datasets to get the exact column structure
-        df_template = pd.read_csv("ultimate_telecom_churn_features.csv", nrows=1)
+        # Read from the Excel (.xls) file template instead of CSV
+        df_template = pd.read_excel("ultimate_telecom_churn_features.xls", nrows=1)
         X_template = df_template.drop(columns=["is_churn", "customer_id"], errors="ignore")
         X_input = X_template.copy()
-        # Set all values to 0 initially
         X_input.loc[0, :] = 0
         
-        # Populate the key user inputs into the input row
+        # Populate user inputs into the input row
         if "tenure_months" in X_input.columns: X_input.loc[0, "tenure_months"] = tenure_months
         if "monthly_charges" in X_input.columns: X_input.loc[0, "monthly_charges"] = monthly_charges
         if "total_charges" in X_input.columns: X_input.loc[0, "total_charges"] = total_charges
@@ -51,7 +49,7 @@ if st.button("Predict Churn Risk (Using Real Model)"):
         if "avg_data_gb_month" in X_input.columns: X_input.loc[0, "avg_data_gb_month"] = avg_data_gb
         if "service_rating_last_6m" in X_input.columns: X_input.loc[0, "service_rating_last_6m"] = service_rating
         
-        # Add engineered features if they exist in your columns
+        # Add engineered features if they exist
         if "overage_ratio" in X_input.columns:
             X_input.loc[0, "overage_ratio"] = overage_charges / (monthly_charges + 1)
         if "spend_per_tenure" in X_input.columns:
@@ -59,7 +57,7 @@ if st.button("Predict Churn Risk (Using Real Model)"):
             
         # Make live prediction using your real Stacking Ensemble model!
         prediction = model.predict(X_input)[0]
-        probability = model.predict_proba(X_input)[0][1] # Probability of churn
+        probability = model.predict_proba(X_input)[0][1]
         
         st.subheader("Prediction Result:")
         if prediction == 1 or probability > 0.40:
@@ -71,4 +69,3 @@ if st.button("Predict Churn Risk (Using Real Model)"):
             
     except Exception as e:
         st.error(f"Error processing prediction: {e}")
-        st.write("Tip: Ensure 'ultimate_telecom_churn_features.csv' and 'stacking_churn_model.pkl' are uploaded to your repository.")
